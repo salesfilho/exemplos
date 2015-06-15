@@ -47,7 +47,7 @@ public class TesteBanco {
 
     public static void main(String args[]) throws Exception {
         TesteBanco teste = new TesteBanco();
-        teste.novaConta();
+        //teste.novaConta();
         //teste.mostrarContas();
         //Conta c = new ContaCorrente();
         //c.setId(Long.parseLong("7"));
@@ -56,7 +56,7 @@ public class TesteBanco {
         //teste.mostrarContas();
         //teste.findByConta(7L);
         //teste.novoEndereco();
-        //teste.novoBanco();
+        teste.novoBanco();
         //teste.novaAgencia();
         //teste.novaCliente();
 
@@ -75,10 +75,13 @@ public class TesteBanco {
 
     public void novoBanco() throws BusinessLogicException {
         banco = new Banco();
-        banco.setRazaoSocial("Banco Sales S/A");
-        banco.setNomeFantasia("Banco Sales");
+        banco.setRazaoSocial("Banco XPTO S/A");
+        banco.setNomeFantasia("XPTO BANK");
+        
+        bancoBusinessLogic.beginTrasaction();
         banco.setEndereco(enderecoBusinessLogic.find(new Endereco(), Long.parseLong("1")));
         bancoBusinessLogic.insert(banco);
+        bancoBusinessLogic.commitTrasaction();
     }
 
     public void novaConta() throws BusinessLogicException {

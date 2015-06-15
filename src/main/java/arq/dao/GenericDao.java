@@ -6,7 +6,6 @@
 package arq.dao;
 
 import java.io.Serializable;
-import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -25,9 +24,6 @@ public abstract class GenericDao<T extends Serializable> implements IGenericDAO<
 
     public GenericDao() {
         entityManager = getInstance();
-        //entityClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getClass();
-        //entityClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        //System.out.println("-------------->" + entityClass.toGenericString());
     }
 
     public static EntityManager getInstance() {
@@ -57,6 +53,7 @@ public abstract class GenericDao<T extends Serializable> implements IGenericDAO<
     public void rollbackTransaction() {
         getInstance().getTransaction().rollback();
     }
+
     public void closeConnection() {
         getInstance().close();
     }
@@ -78,12 +75,12 @@ public abstract class GenericDao<T extends Serializable> implements IGenericDAO<
 
     @Override
     public T findOne(T entity, Long id) {
-        return (T)getInstance().find(entity.getClass(), id);
+        return (T) getInstance().find(entity.getClass(), id);
     }
 
     @Override
     public List<T> findAll(T entity) {
-        return getInstance().createQuery("SELECT t FROM " + entity.getClass().getSimpleName() + " t" ).getResultList();
+        return getInstance().createQuery("SELECT t FROM " + entity.getClass().getSimpleName() + " t").getResultList();
     }
 
 }

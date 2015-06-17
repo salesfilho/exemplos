@@ -3,19 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package arq.business;
-
-import java.io.Serializable;
+package arq.view;
 
 /**
  *
  * @author salesfilho
- * @param <T>
  */
-public class GenericBusinessLogicImp<T> extends GenericBusinessLogic implements Serializable{
+public class GenericCrudMBeanImp extends GenericCrudMBean{
 
-    public GenericBusinessLogicImp() {
+    public GenericCrudMBeanImp() {
         super();
     }
-
+    
 }

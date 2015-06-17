@@ -21,6 +21,6 @@ public interface IGenericCrudMBean<T extends Serializable> {
     void update(T bean) throws ViewException;
 
     void delete(T bean) throws ViewException;
-
-    List<T> list(T bean) throws ViewException;
+    
+    List<T> findAll() throws ViewException;
 }

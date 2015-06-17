@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+
+      xmlns:p="http://primefaces.org/ui">
+    <h:body>
+
+        <ui:composition template="/WEB-INF/template/layout.xhtml">
+
+            <ui:define name="content">
+                Página inicial.
+
+                <h:form>
+                    <p:growl id="growl" life="2000" />
+                    <p:dataTable var="banco" value="#{bancoCrudMBean.bancos}">
+                        <p:column headerText="ID" sortBy="#{banco.id}">
+                            <h:outputText value="#{banco.id}" />
+                        </p:column>
+
+                        <p:column headerText="Razão social" sortBy="#{banco.razaoSocial}">
+                            <h:outputText value="#{banco.razaoSocial}" />
+                        </p:column>
+
+                        <p:column headerText="Nome fantasia" sortBy="#{banco.nomeFantasia}">
+                            <h:outputText value="#{banco.nomeFantasia}" />
+                        </p:column>
+
+                        <p:column headerText="CNPJ" sortBy="#{banco.cnpj}">
+                            <h:outputText value="#{banco.cnpj}" />
+                        </p:column>
+                        <p:column headerText="CIDADE" sortBy="#{banco.endereco.cidade}">
+                            <h:outputText value="#{banco.endereco.cidade}" />
+                        </p:column>
+                        <p:column headerText="Ações">
+                            <p:commandButton actionListener="#" icon="ui-icon-pencil" title="Editar" />
+                            <p:commandButton actionListener="#" icon="ui-icon-note" title="Ver endereços" />
+                            <p:commandButton actionListener="#" icon="ui-icon-close" title="Excluir" />
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

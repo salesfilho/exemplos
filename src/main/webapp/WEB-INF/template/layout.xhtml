@@ -21,11 +21,20 @@
                 <ui:insert name="headerMenu" >
                     <ui:include src="menu.xhtml" />
                 </ui:insert>
-                
+
+                <!--Notificações -->
+                <ui:insert name="notification" >
+                    <ui:include src="notification.xhtml" />
+                </ui:insert>
+
+                <!--Conteúdo -->
                 <ui:insert name="content" >
                     <ui:include src="content.xhtml" />
                 </ui:insert>
+
             </p:layoutUnit>
+
+            <!--Rodapé -->
 
             <p:layoutUnit position="south">
                 <ui:insert name="footer" >

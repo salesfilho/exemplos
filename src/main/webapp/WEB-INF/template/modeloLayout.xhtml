@@ -4,7 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"   
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      >
+          
+      xmlns:p="http://primefaces.org/ui">
     <h:body>
 
         <ui:composition template="/WEB-INF/template/layout.xhtml">
@@ -15,6 +16,10 @@
             <ui:define name="headerMenu">
                 Sobrescreve o template para essa area (Cabeçalho/Menu)
             </ui:define>
+            <ui:define name="notification">
+                Sobrescreve o template para essa area (Notificação/Menu)
+            </ui:define>
+
             <ui:define name="content">
                 Sobrescreve o template para essa area(Página inicial.)
             </ui:define>

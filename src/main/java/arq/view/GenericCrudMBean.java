@@ -12,6 +12,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 
 /**
  *
@@ -42,9 +44,7 @@ public abstract class GenericCrudMBean<T extends Serializable> implements IGener
             if (bean == null) {
                 throw new ViewException("Não é possível gravar objeto nulo");
             }
-            genericBusinessLogic.beginTrasaction();
             genericBusinessLogic.insert(bean);
-            genericBusinessLogic.commitTrasaction();
         } catch (BusinessLogicException ex) {
             Logger.getLogger(GenericCrudMBean.class.getName()).log(Level.SEVERE, null, ex);
             throw new ViewException("Não é possível gravar objeto");
@@ -57,9 +57,7 @@ public abstract class GenericCrudMBean<T extends Serializable> implements IGener
             if (bean == null) {
                 throw new ViewException("Não é possível gravar objeto nulo");
             }
-            genericBusinessLogic.beginTrasaction();
             genericBusinessLogic.update(bean);
-            genericBusinessLogic.commitTrasaction();
         } catch (BusinessLogicException ex) {
             Logger.getLogger(GenericCrudMBean.class.getName()).log(Level.SEVERE, null, ex);
             throw new ViewException("Não é possível atualizar objeto");
@@ -72,9 +70,7 @@ public abstract class GenericCrudMBean<T extends Serializable> implements IGener
             if (bean == null) {
                 throw new ViewException("Não é possível gravar objeto nulo");
             }
-            genericBusinessLogic.beginTrasaction();
             genericBusinessLogic.delete(bean);
-            genericBusinessLogic.commitTrasaction();
         } catch (BusinessLogicException ex) {
             Logger.getLogger(GenericCrudMBean.class.getName()).log(Level.SEVERE, null, ex);
             throw new ViewException("Não é possível excluir objeto");
@@ -85,13 +81,16 @@ public abstract class GenericCrudMBean<T extends Serializable> implements IGener
     public List findAll() throws ViewException {
         List<T> listResult;
         try {
-            genericBusinessLogic.beginTrasaction();
             listResult = genericBusinessLogic.findAll(getBean());
-            genericBusinessLogic.commitTrasaction();
         } catch (BusinessLogicException ex) {
             Logger.getLogger(GenericCrudMBean.class.getName()).log(Level.SEVERE, null, ex);
             throw new ViewException("Não foi possível recuperar objetos.");
         }
         return listResult;
+    }
+
+    public void addNotificationMessage(String messages) {
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, messages, null);
+        FacesContext.getCurrentInstance().addMessage(null, message);
     }
 }

@@ -8,6 +8,7 @@ package model;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,7 +34,7 @@ public class Banco implements Serializable {
     @OneToMany(mappedBy="banco")
     private List<Agencia> agencias;
     
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     private Endereco endereco;
 
     private Long numero;

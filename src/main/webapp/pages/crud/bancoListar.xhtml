@@ -5,16 +5,16 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
 
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:body>
 
         <ui:composition template="/WEB-INF/template/layout.xhtml">
 
             <ui:define name="content">
-                Página inicial.
-
+                Listagem
                 <h:form>
-                    <p:growl id="growl" life="2000" />
+                    <p:growl id="messages" life="2000" />
                     <p:dataTable var="banco" value="#{bancoCrudMBean.bancos}">
                         <p:column headerText="ID" sortBy="#{banco.id}">
                             <h:outputText value="#{banco.id}" />
@@ -35,9 +35,11 @@
                             <h:outputText value="#{banco.endereco.cidade}" />
                         </p:column>
                         <p:column headerText="Ações">
-                            <p:commandButton actionListener="#" icon="ui-icon-pencil" title="Editar" />
+
+                            <p:commandButton actionListener="#{bancoCrudMBean.processUpdate(banco.id)}"  icon="ui-icon-pencil" title="Editar" />
                             <p:commandButton actionListener="#" icon="ui-icon-note" title="Ver endereços" />
                             <p:commandButton actionListener="#" icon="ui-icon-close" title="Excluir" />
+
                         </p:column>
                     </p:dataTable>
                 </h:form>

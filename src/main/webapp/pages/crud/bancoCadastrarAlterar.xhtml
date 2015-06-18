@@ -16,7 +16,6 @@
                 <h:form>
                     <p:growl id="messages" life="2000" />
 
-                    <h:inputHidden id="id" value="#{bancoCrudMBean.bean.id}"/>
                     <p:panelGrid columns="2">
                         <f:facet name="header">
                             Banco: Cadastrar / Alterar
@@ -56,7 +55,7 @@
                         <h:inputText value="#{bancoCrudMBean.bean.endereco.pais}" />
 
                         <f:facet name="footer">
-                            <p:commandButton actionListener="#{bancoCrudMBean.cadastrarAlterar()}" update="messages" value="Executar" icon="ui-icon-check" title="Executar" />
+                            <p:commandButton actionListener="#{bancoCrudMBean.cadastrarOuAlterar()}" update="messages" value="Executar" icon="ui-icon-check" title="Executar" />
                             <p:commandButton actionListener="#" value="Cancelar" icon="ui-icon-cancel" title="Cancelar" />
                         </f:facet>
                     </p:panelGrid>

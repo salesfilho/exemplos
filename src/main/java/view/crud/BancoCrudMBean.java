@@ -35,27 +35,36 @@ public class BancoCrudMBean extends GenericCrudMBean<Banco> {
 
     public BancoCrudMBean() {
         bancoBusinessLogic = new BancoBusinessLogic();
+        banco = new Banco();
+        endereco = new Endereco();
+        banco.setEndereco(endereco);
     }
 
     @PostConstruct
     public void init() {
-        banco = new Banco();
-        endereco = new Endereco();
-        banco.setEndereco(endereco);
-
-        setBean(banco);
+        // Verificação para a página de listar, impedir que o metodo setBean(banco) seja nulo
+        if (banco == null) {
+            banco = new Banco();
+        }
         try {
+            setBean(banco);
+            bancoBusinessLogic.beginTrasaction();
             listBancos = findAll();
+            bancoBusinessLogic.commitTrasaction();
         } catch (ViewException ex) {
             Logger.getLogger(BancoCrudMBean.class.getName()).log(Level.SEVERE, null, ex);
         }
+        // Este código é para o segundo ciclo, quando ha a passagem de objeto de uma view para outra
+        banco = (Banco) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("banco");
+        setBean(banco);
+
     }
 
     public List<Banco> getBancos() {
         return listBancos;
     }
 
-    public void cadastrarAlterar() throws ViewException {
+    public void cadastrarOuAlterar() throws ViewException {
         System.out.println("****************** Passou aqui... *************************** ");
         System.out.println("Bean: " + getBean().toString());
         System.out.println("************************************************************* ");
@@ -70,13 +79,27 @@ public class BancoCrudMBean extends GenericCrudMBean<Banco> {
         addNotificationMessage("Operação realizada com sucesso");
     }
 
-    public void processUpdate(Long id) {
+    public void processInsertOrUpdate(Long id) {
         try {
-            bancoBusinessLogic.beginTrasaction();
-            banco = bancoBusinessLogic.find(banco, id);
-            bancoBusinessLogic.commitTrasaction();
-            setBean(banco);
-            redirect("/pages/crud/bancoCadastrarAlterar.xhtml");
+            //Processado update
+            if (id != null) {
+                banco = new Banco();
+                bancoBusinessLogic.beginTrasaction();
+                banco = bancoBusinessLogic.find(banco, id);
+                bancoBusinessLogic.commitTrasaction();
+                setBean(banco);
+
+                //Coloca o objeto no flash para intercambio entre as visoes
+                FacesContext.getCurrentInstance().getExternalContext().getFlash().put("banco", banco);
+
+                redirect("/pages/crud/bancoCadastrarAlterar.xhtml");
+            } else {
+                banco = new Banco();
+                endereco = new Endereco();
+                banco.setEndereco(endereco);
+                setBean(banco);
+                redirect("/pages/crud/bancoCadastrarAlterar.xhtml");
+            }
 
         } catch (BusinessLogicException ex) {
             Logger.getLogger(BancoCrudMBean.class.getName()).log(Level.SEVERE, null, ex);

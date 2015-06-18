@@ -36,7 +36,7 @@
                         </p:column>
                         <p:column headerText="Ações">
 
-                            <p:commandButton actionListener="#{bancoCrudMBean.processUpdate(banco.id)}"  icon="ui-icon-pencil" title="Editar" />
+                            <p:commandButton actionListener="#{bancoCrudMBean.processInsertOrUpdate()}" ajax="false" icon="ui-icon-pencil" title="Editar" />
                             <p:commandButton actionListener="#" icon="ui-icon-note" title="Ver endereços" />
                             <p:commandButton actionListener="#" icon="ui-icon-close" title="Excluir" />
 

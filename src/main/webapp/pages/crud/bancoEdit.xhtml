@@ -55,7 +55,7 @@
                         <h:inputText value="#{bancoCrudMBean.bean.endereco.pais}" />
 
                         <f:facet name="footer">
-                            <p:commandButton actionListener="#{bancoCrudMBean.cadastrarOuAlterar()}" update="messages" value="Executar" icon="ui-icon-check" title="Executar" />
+                            <p:commandButton actionListener="#{bancoCrudMBean.processUpdate()}" update="messages" value="Executar" icon="ui-icon-check" title="Executar" />
                             <p:commandButton actionListener="#" value="Cancelar" icon="ui-icon-cancel" title="Cancelar" />
                         </f:facet>
                     </p:panelGrid>

@@ -8,12 +8,14 @@ package arq.view;
 import arq.business.GenericBusinessLogicImp;
 import arq.exceptions.BusinessLogicException;
 import arq.exceptions.ViewException;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import view.crud.BancoCrudMBean;
 
 /**
  *
@@ -93,4 +95,14 @@ public abstract class GenericCrudMBean<T extends Serializable> implements IGener
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, messages, null);
         FacesContext.getCurrentInstance().addMessage(null, message);
     }
+        public void redirect(String page) {
+        try {
+            FacesContext.getCurrentInstance().getExternalContext().redirect(
+                    FacesContext.getCurrentInstance().
+                    getExternalContext().getRequestContextPath() + page);
+        } catch (IOException ex) {
+            Logger.getLogger(BancoCrudMBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
 }

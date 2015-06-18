@@ -9,7 +9,7 @@ import arq.exceptions.BusinessLogicException;
 import arq.exceptions.ViewException;
 import arq.view.GenericCrudMBean;
 import business.BancoBusinessLogic;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,10 +28,10 @@ import model.Endereco;
 @ViewScoped
 public class BancoCrudMBean extends GenericCrudMBean<Banco> {
 
-    private BancoBusinessLogic bancoBusinessLogic;
+    private final BancoBusinessLogic bancoBusinessLogic;
     private Banco banco;
-    private transient Banco beanBanco;
-    private Endereco endereco;
+    private Banco beanBanco;
+    private final Endereco endereco;
     private List<Banco> listBancos;
 
     public BancoCrudMBean() {
@@ -39,6 +39,7 @@ public class BancoCrudMBean extends GenericCrudMBean<Banco> {
         banco = new Banco();
         endereco = new Endereco();
         banco.setEndereco(endereco);
+        listBancos = new ArrayList();
     }
 
     @PostConstruct
@@ -46,102 +47,100 @@ public class BancoCrudMBean extends GenericCrudMBean<Banco> {
         setBean(getBeanTransito());
 
     }
-    public Banco getBeanTransito(){
+
+    /* Recupera do FLASH caso tenha sido passado por alguma view ou cria um novo */
+    public Banco getBeanTransito() {
         beanBanco = (Banco) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("banco");
-        if (beanBanco != null ){
+        if (beanBanco != null) {
             return beanBanco;
         }
-        if (banco == null){
+        if (banco == null) {
             return new Banco();
         }
         return banco;
     }
 
-    public List<Banco> getBancos() {
-        processList();
-        return listBancos;
-    }
-
-    public void cadastrarOuAlterar() throws ViewException {
-        System.out.println("****************** Passou aqui... *************************** ");
-        System.out.println("Bean: " + getBean().toString());
-        System.out.println("************************************************************* ");
-
-        bancoBusinessLogic.beginTrasaction();
-        if (banco.getId() != null) {
-            update(banco);
-        } else {
-            insert(banco);
-        }
-        bancoBusinessLogic.commitTrasaction();
-        addNotificationMessage("Operação realizada com sucesso");
-    }
-
-    public void processInsertOrUpdate(Long id) {
+    /* Repopula o Bean a partir do ID passado por parâmetro da View e coloca no FLASH para uso em outra view */
+    public void setBeanTransito(Long id) {
         try {
-            //Processado update
-            if (id != null) {
-                banco = new Banco();
-                bancoBusinessLogic.beginTrasaction();
-                banco = bancoBusinessLogic.find(banco, id);
-                bancoBusinessLogic.commitTrasaction();
-                setBean(banco);
+            bancoBusinessLogic.beginTrasaction();
+            beanBanco = bancoBusinessLogic.find(banco, id);
+            bancoBusinessLogic.commitTrasaction();
 
-                //Coloca o objeto no flash para intercambio entre as visoes
-                FacesContext.getCurrentInstance().getExternalContext().getFlash().put("banco", banco);
-
-                redirect("/pages/crud/bancoCadastrarAlterar.xhtml");
-            } else {
-                banco = new Banco();
-                endereco = new Endereco();
-                banco.setEndereco(endereco);
-                setBean(banco);
-                redirect("/pages/crud/bancoCadastrarAlterar.xhtml");
-            }
-
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("banco", beanBanco);
         } catch (BusinessLogicException ex) {
             Logger.getLogger(BancoCrudMBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public void checkBeforeInsert() {
-
-    }
-
-    public void checkBeforeUpdate() {
-
-    }
-
+    /* Metodos relacionados a listar */
     public void checkBeforeList() {
-
-    }
-
-    public void processInsert() {
-
-    }
-
-    public void processUpdate() {
 
     }
 
     public void processList() {
         try {
-            bancoBusinessLogic.beginTrasaction();
-            listBancos = findAll();
-            bancoBusinessLogic.commitTrasaction();
+            if (listBancos.isEmpty()) {
+                bancoBusinessLogic.beginTrasaction();
+                listBancos = findAll();
+                bancoBusinessLogic.commitTrasaction();
+            }
+
         } catch (ViewException ex) {
             Logger.getLogger(BancoCrudMBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public void redirect(String page) {
+    public List<Banco> list() {
+        processList();
+        return listBancos;
+    }
+
+    /* Metodos relacionados a inserir */
+    public void checkBeforeInsert() {
+
+    }
+
+    public void processInsert() throws ViewException {
+        bancoBusinessLogic.beginTrasaction();
+        insert(banco);
+        bancoBusinessLogic.commitTrasaction();
+        addNotificationMessage("Operação realizada com sucesso");
+        redirect("/pages/crud/bancoList.xhtml");
+
+    }
+
+    /* Metodos relacionados a atualizar */
+    public void checkBeforeUpdate(Long id) {
+        setBeanTransito(id);
+        redirect("/pages/crud/bancoEdit.xhtml");
+    }
+
+    public void processUpdate() throws ViewException {
+        bancoBusinessLogic.beginTrasaction();
+        update(banco);
+        bancoBusinessLogic.commitTrasaction();
+        addNotificationMessage("Operação realizada com sucesso");
+        redirect("/pages/crud/bancoList.xhtml");
+    }
+
+    /* Metodos relacionados a exclusao */
+    public void checkBeforeDelete() {
+        System.out.println("*******************************************************************");
+        System.out.println("Bena: " + getBeanTransito());
+        System.out.println("*******************************************************************");
+    }
+
+    public void processDelete(Long id) throws ViewException {
         try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect(
-                    FacesContext.getCurrentInstance().
-                    getExternalContext().getRequestContextPath() + page);
-        } catch (IOException ex) {
+            bancoBusinessLogic.beginTrasaction();
+            banco = bancoBusinessLogic.find(banco, id);
+            bancoBusinessLogic.delete(banco);
+            bancoBusinessLogic.commitTrasaction();
+            addNotificationMessage("Operação realizada com sucesso");
+            redirect("/pages/crud/bancoList.xhtml");
+        } catch (BusinessLogicException ex) {
             Logger.getLogger(BancoCrudMBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
 }

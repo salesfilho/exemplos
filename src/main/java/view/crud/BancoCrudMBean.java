@@ -30,6 +30,7 @@ public class BancoCrudMBean extends GenericCrudMBean<Banco> {
 
     private BancoBusinessLogic bancoBusinessLogic;
     private Banco banco;
+    private transient Banco beanBanco;
     private Endereco endereco;
     private List<Banco> listBancos;
 
@@ -42,25 +43,22 @@ public class BancoCrudMBean extends GenericCrudMBean<Banco> {
 
     @PostConstruct
     public void init() {
-        // Verificação para a página de listar, impedir que o metodo setBean(banco) seja nulo
-        if (banco == null) {
-            banco = new Banco();
-        }
-        try {
-            setBean(banco);
-            bancoBusinessLogic.beginTrasaction();
-            listBancos = findAll();
-            bancoBusinessLogic.commitTrasaction();
-        } catch (ViewException ex) {
-            Logger.getLogger(BancoCrudMBean.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        // Este código é para o segundo ciclo, quando ha a passagem de objeto de uma view para outra
-        banco = (Banco) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("banco");
-        setBean(banco);
+        setBean(getBeanTransito());
 
+    }
+    public Banco getBeanTransito(){
+        beanBanco = (Banco) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("banco");
+        if (beanBanco != null ){
+            return beanBanco;
+        }
+        if (banco == null){
+            return new Banco();
+        }
+        return banco;
     }
 
     public List<Banco> getBancos() {
+        processList();
         return listBancos;
     }
 
@@ -102,6 +100,36 @@ public class BancoCrudMBean extends GenericCrudMBean<Banco> {
             }
 
         } catch (BusinessLogicException ex) {
+            Logger.getLogger(BancoCrudMBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void checkBeforeInsert() {
+
+    }
+
+    public void checkBeforeUpdate() {
+
+    }
+
+    public void checkBeforeList() {
+
+    }
+
+    public void processInsert() {
+
+    }
+
+    public void processUpdate() {
+
+    }
+
+    public void processList() {
+        try {
+            bancoBusinessLogic.beginTrasaction();
+            listBancos = findAll();
+            bancoBusinessLogic.commitTrasaction();
+        } catch (ViewException ex) {
             Logger.getLogger(BancoCrudMBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

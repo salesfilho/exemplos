@@ -13,18 +13,22 @@
 
             <ui:define name="content">
                 Listagem
-                <p:growl id="messages" life="2000" />
                 <h:form>
+
                     <p:dataTable var="banco" value="#{bancoCrudMBean.list()}">
                         <p:column headerText="ID" sortBy="#{banco.id}">
                             <h:outputText value="#{banco.id}" />
                         </p:column>
 
-                        <p:column headerText="Razão social" sortBy="#{banco.razaoSocial}">
+                        <p:column headerText="NUMERO" sortBy="#{banco.numero}">
+                            <h:outputText value="#{banco.numero}" />
+                        </p:column>
+
+                        <p:column headerText="RAZÃO SOCIAL" sortBy="#{banco.razaoSocial}">
                             <h:outputText value="#{banco.razaoSocial}" />
                         </p:column>
 
-                        <p:column headerText="Nome fantasia" sortBy="#{banco.nomeFantasia}">
+                        <p:column headerText="NOME FANTAZIA" sortBy="#{banco.nomeFantasia}">
                             <h:outputText value="#{banco.nomeFantasia}" />
                         </p:column>
 
@@ -34,20 +38,16 @@
                         <p:column headerText="CIDADE" sortBy="#{banco.endereco.cidade}">
                             <h:outputText value="#{banco.endereco.cidade}" />
                         </p:column>
-                        <p:column headerText="Ações">
+                        <p:column headerText="AÇOES">
 
-                            <p:commandButton actionListener="#{bancoCrudMBean.checkBeforeUpdate(banco.id)}" icon="ui-icon-pencil" title="Editar" />
+                            <p:commandButton actionListener="#{bancoCrudMBean.onStartUpdate(banco.id)}" icon="ui-icon-pencil" title="Editar" />
                             <p:commandButton actionListener="#" icon="ui-icon-note" title="Ver endereços" />
 
 
-                            <p:commandButton actionListener="#{bancoCrudMBean.processDelete(banco.id)}" icon="ui-icon-close" title="Excluir" update="messages">
+                            <p:commandButton actionListener="#{bancoCrudMBean.processDelete(banco.id)}" icon="ui-icon-close" title="Excluir" >
                                 <p:confirm header="Confirmação" message="Tem certeza que deseja excluir o registro?" icon="ui-icon-alert"/>
                             </p:commandButton>
 
-                            <p:confirmDialog global="true">
-                                <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
-                                <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
-                            </p:confirmDialog>
 
                         </p:column>
                     </p:dataTable>

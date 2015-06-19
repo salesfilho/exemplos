@@ -40,24 +40,24 @@ public class BancoCrudMBean extends GenericCrudMBean<Banco> {
         endereco = new Endereco();
         banco.setEndereco(endereco);
         listBancos = new ArrayList();
+        beanBanco = new Banco();
     }
 
     @PostConstruct
     public void init() {
-        setBean(getBeanTransito());
-
+        //Verifica se tem algum Bean em transito antes de setar o bean inicial
+        beanBanco = getBeanTransito();
+        if (beanBanco != null) {
+            setBean(beanBanco);
+        } else {
+            setBean(banco);
+        }
     }
 
     /* Recupera do FLASH caso tenha sido passado por alguma view ou cria um novo */
     public Banco getBeanTransito() {
         beanBanco = (Banco) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("banco");
-        if (beanBanco != null) {
-            return beanBanco;
-        }
-        if (banco == null) {
-            return new Banco();
-        }
-        return banco;
+        return beanBanco;
     }
 
     /* Repopula o Bean a partir do ID passado por parâmetro da View e coloca no FLASH para uso em outra view */
@@ -102,32 +102,53 @@ public class BancoCrudMBean extends GenericCrudMBean<Banco> {
     }
 
     public void processInsert() throws ViewException {
-        bancoBusinessLogic.beginTrasaction();
-        insert(banco);
-        bancoBusinessLogic.commitTrasaction();
-        addNotificationMessage("Operação realizada com sucesso");
-        redirect("/pages/crud/bancoList.xhtml");
+        try {
+            bancoBusinessLogic.beginTrasaction();
+            bancoBusinessLogic.insert(banco);
+            bancoBusinessLogic.commitTrasaction();
+            addNotificationMessage("Operação realizada com sucesso");
+            redirect("/pages/crud/bancoList.xhtml");
+        } catch (BusinessLogicException ex) {
+            Logger.getLogger(BancoCrudMBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
 
     /* Metodos relacionados a atualizar */
-    public void checkBeforeUpdate(Long id) {
+    public void onStartUpdate(Long id) {
         setBeanTransito(id);
         redirect("/pages/crud/bancoEdit.xhtml");
     }
 
+    public void checkBeforeUpdate() {
+        System.out.println("************************ ANTES DO UPDATE *******************************************");
+        System.out.println("Bean: " + banco.toString());
+        System.out.println("BeanBanco: " + beanBanco.toString());
+        System.out.println("Metodo getBean(): " + getBean() );
+        System.out.println("Metodo getBeanTransito(): " + getBeanTransito());
+        System.out.println("*******************************************************************");
+    }
+
     public void processUpdate() throws ViewException {
-        bancoBusinessLogic.beginTrasaction();
-        update(banco);
-        bancoBusinessLogic.commitTrasaction();
-        addNotificationMessage("Operação realizada com sucesso");
-        redirect("/pages/crud/bancoList.xhtml");
+        try {
+            checkBeforeUpdate();
+            bancoBusinessLogic.beginTrasaction();
+            bancoBusinessLogic.update(getBean());
+            bancoBusinessLogic.commitTrasaction();
+            addNotificationMessage("Operação realizada com sucesso");
+            redirect("/pages/crud/bancoList.xhtml");
+        } catch (BusinessLogicException ex) {
+            Logger.getLogger(BancoCrudMBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /* Metodos relacionados a exclusao */
     public void checkBeforeDelete() {
-        System.out.println("*******************************************************************");
-        System.out.println("Bena: " + getBeanTransito());
+        System.out.println("************************ ANTES DO delete *******************************************");
+        System.out.println("Bean: " + banco.toString());
+        System.out.println("BeanBanco: " + beanBanco.toString());
+        System.out.println("Metodo getBean(): " + getBean() );
+        System.out.println("Metodo getBeanTransito(): " + getBeanTransito());
         System.out.println("*******************************************************************");
     }
 

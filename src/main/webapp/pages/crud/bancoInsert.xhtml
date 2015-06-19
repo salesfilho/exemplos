@@ -14,7 +14,7 @@
             <ui:define name="content">
                 Cadastro
                 <h:form>
-                    <p:growl id="messages" life="2000" />
+                    <p:growl id="messages" life="2000" widgetVar="messages" />
 
                     <p:panelGrid columns="2">
                         <f:facet name="header">
@@ -22,10 +22,10 @@
                         </f:facet>
 
                         <h:outputText value="Número:" />
-                        <h:inputText value="#{bancoCrudMBean.bean.numero}" />
+                        <h:inputText id="numero" value="#{bancoCrudMBean.bean.numero}" rendered="true" />
 
                         <h:outputText value="Name:" />
-                        <h:inputText value="#{bancoCrudMBean.bean.nomeFantasia}" />
+                        <h:inputText value="#{bancoCrudMBean.bean.nomeFantasia}" required="true"/>
 
                         <h:outputText value="Razão social:" />
                         <h:inputText value="#{bancoCrudMBean.bean.razaoSocial}" />
@@ -55,7 +55,7 @@
                         <h:inputText value="#{bancoCrudMBean.bean.endereco.pais}" />
 
                         <f:facet name="footer">
-                            <p:commandButton actionListener="#{bancoCrudMBean.processInsert()}" update="messages" value="Executar" icon="ui-icon-check" title="Executar" />
+                            <p:commandButton id="id_btn_execute" actionListener="#{bancoCrudMBean.processInsert()}" update="messages" value="Executar" icon="ui-icon-check" title="Executar" />
                             <p:commandButton actionListener="#" value="Cancelar" icon="ui-icon-cancel" title="Cancelar" />
                         </f:facet>
                     </p:panelGrid>

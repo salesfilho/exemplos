@@ -4,18 +4,22 @@
 <html xmlns="http://www.w3.org/1999/xhtml"   
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
+
     <h:body>
 
         <ui:composition template="/WEB-INF/template/layout.xhtml">
 
             <ui:define name="content">
-                Listagem
+                
                 <h:form>
-
                     <p:dataTable var="banco" value="#{bancoCrudMBean.list()}">
+                        <f:facet name="header">
+                            Listagem
+                        </f:facet>
+
                         <p:column headerText="ID" sortBy="#{banco.id}">
                             <h:outputText value="#{banco.id}" />
                         </p:column>
@@ -40,19 +44,24 @@
                         </p:column>
                         <p:column headerText="AÇOES">
 
+                            <p:growl id="messages" life="2000" widgetVar="messages" />
                             <p:commandButton actionListener="#{bancoCrudMBean.onStartUpdate(banco.id)}" icon="ui-icon-pencil" title="Editar" />
                             <p:commandButton actionListener="#" icon="ui-icon-note" title="Ver endereços" />
 
 
-                            <p:commandButton actionListener="#{bancoCrudMBean.processDelete(banco.id)}" icon="ui-icon-close" title="Excluir" >
+                            <p:commandButton actionListener="#{bancoCrudMBean.processDelete(banco.id)}" update="@all" icon="ui-icon-close" title="Excluir" >
                                 <p:confirm header="Confirmação" message="Tem certeza que deseja excluir o registro?" icon="ui-icon-alert"/>
                             </p:commandButton>
-
-
                         </p:column>
+                        <f:facet name="footer">  
+                            Total de
+                            #{fn:length(bancoCrudMBean.list())}
+                            registros
+
+                        </f:facet>  
                     </p:dataTable>
                 </h:form>
             </ui:define>
-        </ui:composition>
+        </ui:composition>"
     </h:body>
 </html>

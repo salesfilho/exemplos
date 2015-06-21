@@ -10,9 +10,11 @@ import arq.exceptions.BusinessLogicException;
 import arq.exceptions.ViewException;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import view.crud.BancoCrudMBean;
@@ -26,10 +28,24 @@ public abstract class GenericCrudMBean<T extends Serializable> implements IGener
 
     private final GenericBusinessLogicImp<T> genericBusinessLogic;
     private T bean;
+    private T beanTransito;
+    private List<T> listBean;
 
     public GenericCrudMBean() {
         genericBusinessLogic = new GenericBusinessLogicImp();
+        listBean = new ArrayList();
 
+    }
+
+    @PostConstruct
+    public void init() {
+        //Verifica se tem algum Bean em transito antes de setar o bean inicial
+        beanTransito = getBeanTransito();
+        if (beanTransito != null) {
+            setBean(beanTransito);
+        } else {
+            setBean(bean);
+        }
     }
 
     public T getBean() {
@@ -41,61 +57,140 @@ public abstract class GenericCrudMBean<T extends Serializable> implements IGener
     }
 
     @Override
-    public void insert(T bean) throws ViewException {
+    public void insert(T bean){
         try {
             if (bean == null) {
-                throw new ViewException("Não é possível gravar objeto nulo");
+                addMessage("Falha ao realizar operacção", FacesMessage.SEVERITY_ERROR);
             }
+            genericBusinessLogic.beginTrasaction();
             genericBusinessLogic.insert(bean);
+            genericBusinessLogic.commitTrasaction();
+            addMessage("Operação realizada com sucesso", FacesMessage.SEVERITY_INFO);
+
         } catch (BusinessLogicException ex) {
-            Logger.getLogger(GenericCrudMBean.class.getName()).log(Level.SEVERE, null, ex);
-            throw new ViewException("Não é possível gravar objeto");
+            addMessage("Falha ao realizar operacção" + ex.getMessage(), FacesMessage.SEVERITY_ERROR);
         }
     }
 
     @Override
-    public void update(T bean) throws ViewException {
+    public void update(T bean) {
         try {
             if (bean == null) {
-                throw new ViewException("Não é possível gravar objeto nulo");
+                addMessage("Falha ao realizar operacção", FacesMessage.SEVERITY_ERROR);
+                return;
             }
+            genericBusinessLogic.beginTrasaction();
             genericBusinessLogic.update(bean);
+            genericBusinessLogic.commitTrasaction();
+            addMessage("Operação realizada com sucesso", FacesMessage.SEVERITY_INFO);
+
         } catch (BusinessLogicException ex) {
-            Logger.getLogger(GenericCrudMBean.class.getName()).log(Level.SEVERE, null, ex);
-            throw new ViewException("Não é possível atualizar objeto");
+            addMessage("Falha ao realizar operacção" + ex.getMessage(), FacesMessage.SEVERITY_ERROR);
         }
     }
 
     @Override
-    public void delete(T bean) throws ViewException {
+    public void delete(T bean) {
         try {
             if (bean == null) {
-                throw new ViewException("Não é possível gravar objeto nulo");
+                addMessage("Falha ao realizar operacção", FacesMessage.SEVERITY_ERROR);
+                return;
             }
+            genericBusinessLogic.beginTrasaction();
             genericBusinessLogic.delete(bean);
+            genericBusinessLogic.commitTrasaction();
+            addMessage("Operação realizada com sucesso", FacesMessage.SEVERITY_INFO);
+
         } catch (BusinessLogicException ex) {
-            Logger.getLogger(GenericCrudMBean.class.getName()).log(Level.SEVERE, null, ex);
-            throw new ViewException("Não é possível excluir objeto");
+            addMessage("Falha ao realizar operacção" + ex.getMessage(), FacesMessage.SEVERITY_ERROR);
         }
     }
 
     @Override
-    public List findAll() throws ViewException {
-        List<T> listResult;
+    public T find(T bean, Long id) {
+        T result = null;
         try {
-            listResult = genericBusinessLogic.findAll(getBean());
+            genericBusinessLogic.beginTrasaction();
+            result = (T) genericBusinessLogic.find(bean, id);
+            genericBusinessLogic.commitTrasaction();
         } catch (BusinessLogicException ex) {
-            Logger.getLogger(GenericCrudMBean.class.getName()).log(Level.SEVERE, null, ex);
-            throw new ViewException("Não foi possível recuperar objetos.");
+            addMessage("Falha ao realizar operacção" + ex.getMessage(), FacesMessage.SEVERITY_ERROR);
+            //throw new ViewException("Não foi possível recuperar objeto.");
+        }
+        return result;
+    }
+
+    @Override
+    public List findAll() {
+        List<T> listResult = null;
+        try {
+            genericBusinessLogic.beginTrasaction();
+            listResult = genericBusinessLogic.findAll(getBean());
+            genericBusinessLogic.commitTrasaction();
+            addMessage("Operação realizada com sucesso", FacesMessage.SEVERITY_INFO);
+
+        } catch (BusinessLogicException ex) {
+            addMessage("Falha ao realizar operacção" + ex.getMessage(), FacesMessage.SEVERITY_ERROR);
         }
         return listResult;
     }
 
-    public void addNotificationMessage(String messages) {
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, messages, null);
+    /* Metodos genericos chamados/utilizados pela View */
+    /* Metodos relacionados a listar */
+    public void checkBeforeList() {
+        System.out.println("************************ ANTES DO LIST *******************************************");
+        System.out.println("Bean: " + bean.toString());
+    }
+
+    public List<T> list() {
+        if (listBean.isEmpty()) {
+            listBean = findAll();
+        }
+        return listBean;
+    }
+
+    /* Metodos relacionados a inserir */
+    public void checkBeforeInsert() {
+        System.out.println("************************ ANTES DO INSERT *******************************************");
+        System.out.println("Bean: " + bean.toString());
+        if (getBean() == null) {
+            addMessage("Falha ao realizar operação", FacesMessage.SEVERITY_ERROR);
+        }
+    }
+
+    public void processInsert() {
+        try {
+            checkBeforeInsert();
+            insert(bean);
+        } catch (Exception ex) {
+            Logger.getLogger(GenericCrudMBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /* Metodos relacionados a atualizar */
+    public void onStartUpdate(Long id) {
+        setBeanTransito(id);
+    }
+
+    public void checkBeforeUpdate() {
+        System.out.println("************************ ANTES DO UPDATE *******************************************");
+        System.out.println("Bean: " + getBean().toString());
+        System.out.println("Metodo getBeanTransito(): " + getBeanTransito());
+        System.out.println("*******************************************************************");
+    }
+
+    public void processUpdate() {
+        checkBeforeUpdate();
+        update(getBean());
+    }
+
+    /* Metodos de view auxiliares */
+    public void addMessage(String messages, FacesMessage.Severity severity) {
+        FacesMessage message = new FacesMessage(severity, messages, null);
         FacesContext.getCurrentInstance().addMessage(null, message);
     }
-        public void redirect(String page) {
+
+    public void redirect(String page) {
         try {
             FacesContext.getCurrentInstance().getExternalContext().redirect(
                     FacesContext.getCurrentInstance().
@@ -103,6 +198,31 @@ public abstract class GenericCrudMBean<T extends Serializable> implements IGener
         } catch (IOException ex) {
             Logger.getLogger(BancoCrudMBean.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    /* Metodos relacionados a exclusao, chamado antes de excluir um objeto */
+    public void checkBeforeDelete() throws Exception {
+        System.out.println("************************ ANTES DO DELETE *******************************************");
+        if (getBean() == null) {
+            throw new Exception("Não é possível excluir objto nulo");
+        }
+    }
+
+    public void processDelete(Long id) throws ViewException, Exception {
+        checkBeforeDelete();
+        bean = find(getBean(), id);
+        delete(bean);
+    }
+
+    /* Recupera do FLASH caso tenha sido passado por alguma view ou cria um novo */
+    public T getBeanTransito() {
+        return (T) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("bean");
+    }
+
+    /* Repopula o Bean a partir do ID passado por parâmetro da View e coloca no FLASH para uso em outra view */
+    public void setBeanTransito(Long id) {
+        beanTransito = (T) find(getBean(), id);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("bean", beanTransito);
     }
 
 }

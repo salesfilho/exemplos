@@ -143,6 +143,11 @@ public class Banco implements Serializable {
         }
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Banco{" + "id=" + id + ", agencias=" + agencias + ", endereco=" + endereco + ", numero=" + numero + ", razaoSocial=" + razaoSocial + ", nomeFantasia=" + nomeFantasia + ", cnpj=" + cnpj + '}';
+    }
     
 
 }

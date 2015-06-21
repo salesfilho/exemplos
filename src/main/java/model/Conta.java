@@ -15,7 +15,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
@@ -108,11 +107,10 @@ public abstract class Conta implements Serializable {
         return true;
     }
 
-    
-
     @Override
     public String toString() {
-        return "ID:" + getId() + " NUMERO:" + getNumero() + " SALDO:" + getSaldo();
+        return "Conta{" + "id=" + id + ", numero=" + numero + ", saldo=" + saldo + ", cliente=" + cliente + '}';
     }
 
+    
 }

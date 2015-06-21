@@ -16,11 +16,13 @@ import java.util.List;
  */
 public interface IGenericCrudMBean<T extends Serializable> {
 
-    void insert(T bean) throws ViewException;
+    public void insert(T bean) throws ViewException;
 
-    void update(T bean) throws ViewException;
+    public void update(T bean) throws ViewException;
 
-    void delete(T bean) throws ViewException;
-    
-    List<T> findAll() throws ViewException;
+    public void delete(T bean) throws ViewException;
+
+    public List<T> findAll() throws ViewException;
+
+    public T find(T bean, Long id) throws ViewException;
 }

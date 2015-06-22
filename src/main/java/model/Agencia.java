@@ -8,6 +8,7 @@ package model;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,16 +32,15 @@ public class Agencia implements Serializable {
     private Long id;
 
     @ManyToOne
-    //@JoinColumn(name = "id", referencedColumnName = "id")
     private Banco banco;
 
     @Column(nullable = false, unique = true)
     private Long numero;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     private Endereco endereco;
 
-    @OneToMany(mappedBy="agencia")
+    @OneToMany(mappedBy = "agencia")
     private List<Cliente> clientes;
 
     private String razaoSocial;
@@ -166,5 +166,4 @@ public class Agencia implements Serializable {
         return "Agencia{" + "id=" + id + ", banco=" + banco + ", numero=" + numero + ", endereco=" + endereco + ", clientes=" + clientes + ", razaoSocial=" + razaoSocial + ", nomeFantasia=" + nomeFantasia + ", cnpj=" + cnpj + '}';
     }
 
-    
 }

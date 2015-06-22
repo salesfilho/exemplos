@@ -12,48 +12,53 @@
         <ui:composition template="/WEB-INF/template/layout.xhtml">
 
             <ui:define name="content">
-                
+
                 <h:form>
                     <p:panelGrid columns="2">
                         <f:facet name="header">
                             Cadastramento
                         </f:facet>
 
+                        <h:outputText value="BANCO:" />
+                        <p:selectOneMenu id="id_banco" value="#{agenciaCrudMBean.bean.banco}">
+                            <f:selectItems value="#{bancoCrudMBean.list()}" var="banco" itemLabel="#{banco.nomeFantasia}" itemValue="#{banco}" />
+                        </p:selectOneMenu>
+
                         <h:outputText value="Número:" />
-                        <h:inputText id="numero" value="#{bancoCrudMBean.bean.numero}" rendered="true" />
+                        <h:inputText id="numero" value="#{agenciaCrudMBean.bean.numero}" rendered="true" />
 
                         <h:outputText value="Name:" />
-                        <h:inputText value="#{bancoCrudMBean.bean.nomeFantasia}" required="true"/>
+                        <h:inputText value="#{agenciaCrudMBean.bean.nomeFantasia}" required="true"/>
 
                         <h:outputText value="Razão social:" />
-                        <h:inputText value="#{bancoCrudMBean.bean.razaoSocial}" />
+                        <h:inputText value="#{agenciaCrudMBean.bean.razaoSocial}" />
 
                         <h:outputText value="CNPJ:" />
-                        <h:inputText value="#{bancoCrudMBean.bean.cnpj}" />
+                        <h:inputText value="#{agenciaCrudMBean.bean.cnpj}" />
 
                         <h:outputText value="Endereço/Logradouro:" />
-                        <h:inputText value="#{bancoCrudMBean.bean.endereco.logradouro}" />
+                        <h:inputText value="#{agenciaCrudMBean.bean.endereco.logradouro}" />
 
                         <h:outputText value="Endereço/Bairro:" />
-                        <h:inputText value="#{bancoCrudMBean.bean.endereco.bairro}" />
+                        <h:inputText value="#{agenciaCrudMBean.bean.endereco.bairro}" />
 
                         <h:outputText value="Endereço/Número:" />
-                        <h:inputText value="#{bancoCrudMBean.bean.endereco.numero}" />
+                        <h:inputText value="#{agenciaCrudMBean.bean.endereco.numero}" />
 
                         <h:outputText value="Endereço/Cidade" />
-                        <h:inputText value="#{bancoCrudMBean.bean.endereco.cidade}" />
+                        <h:inputText value="#{agenciaCrudMBean.bean.endereco.cidade}" />
 
                         <h:outputText value="Endereço/Estado:" />
-                        <h:inputText value="#{bancoCrudMBean.bean.endereco.estado}" />
+                        <h:inputText value="#{agenciaCrudMBean.bean.endereco.estado}" />
 
                         <h:outputText value="Endereço/CEP:" />
-                        <h:inputText value="#{bancoCrudMBean.bean.endereco.cep}" />
+                        <h:inputText value="#{agenciaCrudMBean.bean.endereco.cep}" />
 
                         <h:outputText value="Endereço/pais:" />
-                        <h:inputText value="#{bancoCrudMBean.bean.endereco.pais}" />
+                        <h:inputText value="#{agenciaCrudMBean.bean.endereco.pais}" />
 
                         <f:facet name="footer">
-                            <p:commandButton id="id_btn_execute" actionListener="#{bancoCrudMBean.processInsert()}" value="Executar" icon="ui-icon-check" title="Executar" />
+                            <p:commandButton id="id_btn_execute" actionListener="#{agenciaCrudMBean.processInsert()}" value="Executar" icon="ui-icon-check" title="Executar" />
                             <p:commandButton actionListener="#" value="Cancelar" icon="ui-icon-cancel" title="Cancelar" />
                         </f:facet>
                     </p:panelGrid>

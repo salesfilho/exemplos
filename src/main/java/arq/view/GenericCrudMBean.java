@@ -59,15 +59,15 @@ public abstract class GenericCrudMBean<T extends Serializable> implements IGener
     public void insert(T bean) {
         try {
             if (bean == null) {
-                addMessage("Falha ao realizar operacção", FacesMessage.SEVERITY_ERROR);
+                addMessage("Falha ao realizar operação", FacesMessage.SEVERITY_ERROR);
             }
             genericBusinessLogic.beginTrasaction();
             genericBusinessLogic.insert(bean);
             genericBusinessLogic.commitTrasaction();
-            addMessage("Operação realizada com sucesso", FacesMessage.SEVERITY_INFO);
+            addMessage("Operação realizada com sucesso!", FacesMessage.SEVERITY_INFO);
 
         } catch (BusinessLogicException ex) {
-            addMessage("Falha ao realizar operacção" + ex.getMessage(), FacesMessage.SEVERITY_ERROR);
+            addMessage("Falha ao realizar operação" + ex.getMessage(), FacesMessage.SEVERITY_ERROR);
         }
     }
 
@@ -81,10 +81,10 @@ public abstract class GenericCrudMBean<T extends Serializable> implements IGener
             genericBusinessLogic.beginTrasaction();
             genericBusinessLogic.update(bean);
             genericBusinessLogic.commitTrasaction();
-            addMessage("Operação realizada com sucesso", FacesMessage.SEVERITY_INFO);
+            addMessage("Operação realizada com sucesso!", FacesMessage.SEVERITY_INFO);
 
         } catch (BusinessLogicException ex) {
-            addMessage("Falha ao realizar operacção" + ex.getMessage(), FacesMessage.SEVERITY_ERROR);
+            addMessage("Falha ao realizar operação." + ex.getMessage(), FacesMessage.SEVERITY_ERROR);
         }
     }
 
@@ -92,16 +92,16 @@ public abstract class GenericCrudMBean<T extends Serializable> implements IGener
     public void delete(T bean) {
         try {
             if (bean == null) {
-                addMessage("Falha ao realizar operacção", FacesMessage.SEVERITY_ERROR);
+                addMessage("Falha ao realizar operação!", FacesMessage.SEVERITY_ERROR);
                 return;
             }
             genericBusinessLogic.beginTrasaction();
             genericBusinessLogic.delete(bean);
             genericBusinessLogic.commitTrasaction();
-            addMessage("Operação realizada com sucesso", FacesMessage.SEVERITY_INFO);
+            addMessage("Operação realizada com sucesso!", FacesMessage.SEVERITY_INFO);
 
         } catch (BusinessLogicException ex) {
-            addMessage("Falha ao realizar operacção" + ex.getMessage(), FacesMessage.SEVERITY_ERROR);
+            addMessage("Falha ao realizar operação" + ex.getMessage(), FacesMessage.SEVERITY_ERROR);
         }
     }
 
@@ -113,8 +113,7 @@ public abstract class GenericCrudMBean<T extends Serializable> implements IGener
             result = (T) genericBusinessLogic.find(bean, id);
             genericBusinessLogic.commitTrasaction();
         } catch (BusinessLogicException ex) {
-            addMessage("Falha ao realizar operacção" + ex.getMessage(), FacesMessage.SEVERITY_ERROR);
-            //throw new ViewException("Não foi possível recuperar objeto.");
+            addMessage("Falha ao realizar operação" + ex.getMessage(), FacesMessage.SEVERITY_ERROR);
         }
         return result;
     }
@@ -129,7 +128,7 @@ public abstract class GenericCrudMBean<T extends Serializable> implements IGener
             addMessage("Operação realizada com sucesso", FacesMessage.SEVERITY_INFO);
 
         } catch (BusinessLogicException ex) {
-            addMessage("Falha ao realizar operacção" + ex.getMessage(), FacesMessage.SEVERITY_ERROR);
+            addMessage("Falha ao realizar operação" + ex.getMessage(), FacesMessage.SEVERITY_ERROR);
         }
         return listResult;
     }
@@ -153,7 +152,7 @@ public abstract class GenericCrudMBean<T extends Serializable> implements IGener
         System.out.println("************************ ANTES DO INSERT *******************************************");
         System.out.println("Bean: " + bean.toString());
         if (getBean() == null) {
-            addMessage("Falha ao realizar operação", FacesMessage.SEVERITY_ERROR);
+            addMessage("Falha ao realizar operação.", FacesMessage.SEVERITY_ERROR);
         }
     }
 

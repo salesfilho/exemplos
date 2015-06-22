@@ -6,10 +6,13 @@
 package view.crud;
 
 import arq.view.GenericCrudMBean;
-import business.BancoBusinessLogic;
+import java.util.ArrayList;
+import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import model.Agencia;
 import model.Banco;
+import model.Cliente;
 import model.Endereco;
 
 /**
@@ -18,27 +21,33 @@ import model.Endereco;
  */
 @ManagedBean
 @ViewScoped
-public class BancoCrudMBean extends GenericCrudMBean<Banco> {
+public class AgenciaCrudMBean extends GenericCrudMBean<Agencia> {
 
+    private Agencia agencia;
     private Banco banco;
+    private List<Cliente> clientes;
     private Endereco endereco;
 
-    public BancoCrudMBean() {
-        endereco = new Endereco();
+    public AgenciaCrudMBean() {
+        agencia = new Agencia();
+        clientes = new ArrayList();
         banco = new Banco();
-        banco.setEndereco(endereco);
-        setBean(banco);
+        endereco = new Endereco();
+        agencia.setEndereco(endereco);
+        agencia.setClientes(clientes);
+        agencia.setBanco(banco);
+        setBean(agencia);
     }
 
     @Override
     public void processDelete(Long id) {
         super.processDelete(id);
-        redirect("/pages/crud/bancoList.xhtml");
+        redirect("/pages/crud/agenciaList.xhtml");
     }
 
     @Override
     public void onStartUpdate(Long id) {
         super.onStartUpdate(id);
-        redirect("/pages/crud/bancoEdit.xhtml");
+        redirect("/pages/crud/agenciaEdit.xhtml");
     }
 }

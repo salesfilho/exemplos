@@ -15,42 +15,45 @@
             <ui:define name="content">
 
                 <h:form>
-                    <p:dataTable var="banco" value="#{bancoCrudMBean.list()}">
+                    <p:dataTable var="agencia" value="#{agenciaCrudMBean.list()}">
                         <f:facet name="header">
                             Listagem
                         </f:facet>
 
-                        <p:column headerText="ID" sortBy="#{banco.id}">
-                            <h:outputText value="#{banco.id}" />
+                        <p:column headerText="ID" sortBy="#{agencia.id}">
+                            <h:outputText value="#{agencia.id}" />
                         </p:column>
 
-                        <p:column headerText="NUMERO" sortBy="#{banco.numero}">
-                            <h:outputText value="#{banco.numero}" />
+                        <p:column headerText="BANCO" sortBy="#{agencia.banco.nomeFantasia}">
+                            <h:outputText value="#{agencia.numero}" />
+                        </p:column>
+                        <p:column headerText="NUMERO" sortBy="#{agencia.numero}">
+                            <h:outputText value="#{agencia.numero}" />
                         </p:column>
 
-                        <p:column headerText="RAZÃO SOCIAL" sortBy="#{banco.razaoSocial}">
+                        <p:column headerText="RAZÃO SOCIAL" sortBy="#{agencia.razaoSocial}">
                             <h:outputText value="#{banco.razaoSocial}" />
                         </p:column>
 
                         <p:column headerText="NOME FANTAZIA" sortBy="#{banco.nomeFantasia}">
-                            <h:outputText value="#{banco.nomeFantasia}" />
+                            <h:outputText value="#{agencia.nomeFantasia}" />
                         </p:column>
 
-                        <p:column headerText="CNPJ" sortBy="#{banco.cnpj}">
-                            <h:outputText value="#{banco.cnpj}" />
+                        <p:column headerText="CNPJ" sortBy="#{agencia.cnpj}">
+                            <h:outputText value="#{agencia.cnpj}" />
                         </p:column>
-                        <p:column headerText="CIDADE" sortBy="#{banco.endereco.cidade}">
-                            <h:outputText value="#{banco.endereco.cidade}" />
+                        <p:column headerText="CIDADE" sortBy="#{agencia.endereco.cidade}">
+                            <h:outputText value="#{agencia.endereco.cidade}" />
                         </p:column>
                         <p:column headerText="AÇOES" style="alignment-adjust: central">
-                            <p:commandButton actionListener="#{bancoCrudMBean.onStartUpdate(banco.id)}" icon="ui-icon-pencil" title="Editar" />
-                            <p:commandButton actionListener="#{bancoCrudMBean.processDelete(banco.id)}" icon="ui-icon-close" title="Excluir" >
+                            <p:commandButton actionListener="#{agenciaCrudMBean.onStartUpdate(banco.id)}" icon="ui-icon-pencil" title="Editar" />
+                            <p:commandButton actionListener="#{agenciaCrudMBean.processDelete(banco.id)}" icon="ui-icon-close" title="Excluir" >
                                 <p:confirm header="Confirmação" message="Tem certeza que deseja excluir o registro?" icon="ui-icon-alert"/>
                             </p:commandButton>
                         </p:column>
                         <f:facet name="footer">  
                             Total de
-                            #{fn:length(bancoCrudMBean.list())}
+                            #{fn:length(agenciaCrudMBean.list())}
                             registros
 
                         </f:facet>  

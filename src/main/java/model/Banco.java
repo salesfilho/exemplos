@@ -146,7 +146,8 @@ public class Banco implements Serializable {
 
     @Override
     public String toString() {
-        return "Banco{" + "id=" + id + ", agencias=" + agencias + ", endereco=" + endereco + ", numero=" + numero + ", razaoSocial=" + razaoSocial + ", nomeFantasia=" + nomeFantasia + ", cnpj=" + cnpj + '}';
+        //return "Banco{" + "id=" + id + ", agencias=" + agencias + ", endereco=" + endereco + ", numero=" + numero + ", razaoSocial=" + razaoSocial + ", nomeFantasia=" + nomeFantasia + ", cnpj=" + cnpj + '}';
+        return String.format("%s[id=%d]", getClass().getSimpleName(), getId()); //"Banco{" + "id=" + id + ", agencias=" + agencias + ", endereco=" + endereco + ", numero=" + numero + ", razaoSocial=" + razaoSocial + ", nomeFantasia=" + nomeFantasia + ", cnpj=" + cnpj + '}';
     }
     
 

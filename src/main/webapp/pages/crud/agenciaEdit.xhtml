@@ -17,20 +17,25 @@
             <ui:define name="content">
 
                 <h:form>
+                    <p:growl id="messages" life="2000" />
+
                     <p:panelGrid columns="2">
                         <f:facet name="header">
-                            Cadastramento
+                            Alteração
                         </f:facet>
 
                         <h:outputText value="BANCO:" />
                         <p:selectOneMenu id="id_banco" value="#{agenciaCrudMBean.bean.banco}" converter="omnifaces.SelectItemsConverter">
-                            <f:selectItems value="#{bancoCrudMBean.list()}" var="banco" itemLabel="#{banco.nomeFantasia}" itemValue="#{banco}" />
+                            <f:selectItems value="#{bancoCrudMBean.list()}" var="x" itemLabel="#{x.razaoSocial}" itemValue="#{x}" />
                         </p:selectOneMenu>
+
+                        <h:outputText value="BANCO2:" />
+                        <h:inputText  value="#{agenciaCrudMBean.bean.banco.razaoSocial}" rendered="true" />
 
                         <h:outputText value="Número:" />
                         <h:inputText id="numero" value="#{agenciaCrudMBean.bean.numero}" rendered="true" />
 
-                        <h:outputText value="Nome fantasia:" />
+                        <h:outputText value="Name fantasia:" />
                         <h:inputText value="#{agenciaCrudMBean.bean.nomeFantasia}" required="true"/>
 
                         <h:outputText value="Razão social:" />
@@ -61,7 +66,7 @@
                         <h:inputText value="#{agenciaCrudMBean.bean.endereco.pais}" />
 
                         <f:facet name="footer">
-                            <p:commandButton id="id_btn_execute" actionListener="#{agenciaCrudMBean.processInsert()}" value="Executar" icon="ui-icon-check" title="Executar" />
+                            <p:commandButton id="id_btn_execute" actionListener="#{agenciaCrudMBean.processInsert()}" update="messages" value="Executar" icon="ui-icon-check" title="Executar" />
                             <p:commandButton actionListener="#" value="Cancelar" icon="ui-icon-cancel" title="Cancelar" />
                         </f:facet>
                     </p:panelGrid>

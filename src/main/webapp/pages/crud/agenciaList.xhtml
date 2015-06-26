@@ -25,7 +25,7 @@
                         </p:column>
 
                         <p:column headerText="BANCO" sortBy="#{agencia.banco.nomeFantasia}">
-                            <h:outputText value="#{agencia.numero}" />
+                            <h:outputText value="#{agencia.banco.nomeFantasia}" />
                         </p:column>
                         <p:column headerText="NUMERO" sortBy="#{agencia.numero}">
                             <h:outputText value="#{agencia.numero}" />
@@ -46,8 +46,8 @@
                             <h:outputText value="#{agencia.endereco.cidade}" />
                         </p:column>
                         <p:column headerText="AÇOES" style="alignment-adjust: central">
-                            <p:commandButton actionListener="#{agenciaCrudMBean.onStartUpdate(banco.id)}" icon="ui-icon-pencil" title="Editar" />
-                            <p:commandButton actionListener="#{agenciaCrudMBean.processDelete(banco.id)}" icon="ui-icon-close" title="Excluir" >
+                            <p:commandButton actionListener="#{agenciaCrudMBean.onStartUpdate(agencia.id)}" icon="ui-icon-pencil" title="Editar" />
+                            <p:commandButton actionListener="#{agenciaCrudMBean.processDelete(agencia.id)}" icon="ui-icon-close" title="Excluir" >
                                 <p:confirm header="Confirmação" message="Tem certeza que deseja excluir o registro?" icon="ui-icon-alert"/>
                             </p:commandButton>
                         </p:column>
